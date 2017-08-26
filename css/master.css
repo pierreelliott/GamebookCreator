@@ -1,0 +1,7 @@
+.btn_add {
+  content: "+";
+  color: white;
+  background-color: green;
+  padding: 1em;
+  border-radius: 0.5em;
+}
