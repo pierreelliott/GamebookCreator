@@ -1,0 +1,32 @@
+.btn-group * {
+	margin: 0.8vh 0.8vw;
+}
+
+.btn-add {
+	color: white;
+	font-weight: bold;
+	background-color: green;
+	padding: 1vh 1vw;
+	border-radius: 0.5em;
+	display: inline-block;
+	transition: 0.5s;
+}
+.btn-add:hover {
+	cursor: pointer;
+}
+
+.btn-add-text:hover::after, .btn-add-text:focus::after {
+	content: " Add textarea";
+}
+
+.btn-add-action:hover::after, .btn-add-action:focus::after {
+	content: " Add action";
+}
+
+.btn-add-choice:hover::after, .btn-add-choice:focus::after {
+	content: " Add choice";
+}
+
+.btn-add-situation:hover::after, .btn-add-situation:focus::after {
+	content: " Add situation";
+}
