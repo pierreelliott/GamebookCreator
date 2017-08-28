@@ -7,7 +7,7 @@
 		"content": [
 			{
 				"type": "text",
-				"content": "I will tell you how my adventures started...."
+				"content": ["I will tell you how my adventures started...."]
 			},
 			{
 				"type": "action",
@@ -23,7 +23,7 @@
 			},
 			{
 				"type": "text",
-				"content": "What do you want to hear first ?"
+				"content": ["What do you want to hear first ?"]
 			}
 		],
 		"link": "situation1"
@@ -38,11 +38,10 @@
 					"content": [
 						{
 							"type": "text",
-							"content": "Well, that's pretty simple to start with. But I guess it's a good question."
-						},
-						{
-							"type": "text",
-							"content": "My name is Bond, James Bond."
+							"content": [
+								"Well, that's pretty simple to start with. But I guess it's a good question.",
+								"My name is Bond, James Bond."
+								]
 						}
 					],
 					"link": "situation2"
@@ -53,11 +52,10 @@
 					"content": [
 						{
 							"type": "text",
-							"content": "Oh ! You are pretty impatient. Don't you want to know my name first ?"
-						},
-						{
-							"type": "text",
-							"content": "So for your information my name is Bond, James Bond."
+							"content": [
+								"Oh ! You are pretty impatient. Don't you want to know my name first ?",
+								"So for your information my name is Bond, James Bond."
+								]
 						}
 					],
 					"link": "situation2"
@@ -72,27 +70,17 @@
 					"name": "Isn't James Bond supposed to be russian ?",
 					"content": [
 						{
-							"type": "condition",
+							"type": "text",
 							"condition": ["neverChose_choice014"],
-							"content": [
-								{
-									"type": "text",
-									"content": "What ? {playerNameCap} are you serious ?"
-								},
-								{
-									"type": "text",
-									"content": "James B... Haem, I am british."
-								}
-							]
+							"content":
+								"What ? {playerNameCap} are you serious ?
+								James B... Haem, I am british."
 						},
 						{
-							"type": "condition",
+							"type": "text",
 							"condition": ["chose_choice014"],
 							"content": [
-								{
-									"type": "text",
-									"content": "Do you hear when I am talking ? I am british."
-								}
+								"Do you hear when I am talking ? I am british."
 							]
 						},
 						{
