@@ -21,10 +21,22 @@
 	transition: 0.5s;
 	padding: 10%;
 }
-.main-links:hover .description {
+.main-links:hover .description, .main-links:focus .description {
 	opacity: 1;
 	background-color: rgba(0, 0, 0, 0.5);
 	color: white;
+}
+.description a {
+	text-decoration: none;
+	color: white;
+	background-color: green;
+	border-radius: 0.5em;
+}
+.description a:hover, .description a:active {
+        text-decoration: none;
+	color: white;
+        background-color: darkgreen;
+        border-radius: 0.5em;
 }
 
 .flex-container {
