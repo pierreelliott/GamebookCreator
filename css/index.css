@@ -19,10 +19,10 @@
 .description {
 	opacity: 0;
 	transition: 0.5s;
+	padding: 10%;
 }
 .main-links:hover .description {
 	opacity: 1;
-	padding: 10%;
 	background-color: rgba(0, 0, 0, 0.5);
 	color: white;
 }
