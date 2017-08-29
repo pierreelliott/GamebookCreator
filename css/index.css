@@ -1,0 +1,62 @@
+#reader {
+	background-image: url("../src/reading_large.jpg");
+}
+
+#creator {
+	background-image: url("../src/writing_large.jpg");
+}
+#main {
+	height: 100%;
+	width: 100%;
+}
+
+.main-links {
+	cursor: pointer;
+	background-position: center;
+    background-repeat: no-repeat;
+	background-size: cover;
+}
+.description {
+	opacity: 0;
+	transition: 0.5s;
+}
+.main-links:hover .description {
+	opacity: 1;
+	padding: 10%;
+	background-color: rgba(0, 0, 0, 0.5);
+	color: white;
+}
+
+.flex-container {
+    display: -webkit-flex;
+    display: flex;
+    text-align: center;
+}
+.flex-container.exterior {
+	-webkit-flex-direction: column;
+    flex-direction: column;
+}
+
+.flex-item {
+    margin: auto;
+}
+.flex-item.flex-container {
+	height: 50%;
+	width: 100%;
+}
+
+body, html {
+	height: 100%;
+	margin: 0;
+}
+
+@media (orientation: landscape) {
+    .flex-container.exterior {
+		-webkit-flex-direction: row;
+	    flex-direction: row;
+    }
+	.flex-item.flex-container {
+		height: 100%;
+		width: 50%;
+	}
+}

@@ -4,43 +4,31 @@
 <head>
 	<meta charset="utf-8">
 	<title>Interactive Adventures Creator</title>
-	<link rel="stylesheet" type="text/css" href="css/master.css">
-	<link rel="stylesheet" type="text/css" href="css/buttons.css">
+	<link rel="stylesheet" type="text/css" href="css/index.css">
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
 
-<div id="menu">
-	<div id="btn_toggleMenu" class="btn-menu">
-
+<div id="main" class="flex-container exterior">
+	<div id="reader" class="main-links flex-item flex-container">
+		<div id="readerDescription" class="description flex-item">
+			<h1>Reader</h1>
+			<p>Read and play to your favorite gamebook anywhere on the planet.</p>
+			<p>(We only support gamebook created with our tool)</p>
+		</div>
 	</div>
-	<div id="btn_menuSave" class="btn-menu">
-		Save
-	</div>
-	<div id="btn_menuLoad" class="btn-menu">
-		Load
+	<div id="creator" class="main-links flex-item flex-container">
+		<div id="creatorDescription" class="description flex-item">
+			<h1>Creator</h1>
+			<p>Create your own gamebook with this simple and easy-to-use gamebook creator tool.</p>
+		</div>
 	</div>
 </div>
 
-<div id="creationField">
-	<div id="startSituation" class="situation active">
-		<div class="situation-header" onclick="toggleDisplay(this)">
-			Starting situation
-		</div>
-		<div class="situation-content">
-			<div class="btn-group">
-				<div id="btn_addText" class="btn-add btn-add-text fa fa-edit" onclick="addField(this,'text')"></div><div id="btn_addAction" class="btn-add btn-add-action fa fa-cog" onclick="addField(this,'action')"></div>
-			</div>
-		</div>
-	</div>
-	<div id="btn_addSituation" class="btn-add btn-add-situation fa fa-map-o"></div>
-</div>
 
-<script type="text/javascript" src="js/fieldsManipulation.js"></script>
 <script type="text/javascript" src="js/UI.js"></script>
-<script type="text/javascript" src="js/storyManager.js"></script>
 
 </body>
 

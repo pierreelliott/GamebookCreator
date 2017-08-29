@@ -34,14 +34,16 @@ function createSituation(jsonObject) {
 	var situationHeader = document.createElement("div");
 	var situationContent = document.createElement("div");
 	var btn_addChoice = document.createElement("div");
+	console.log("3");
+	console.log(jsonObject);
 
 	btn_addChoice.className = "btn-add btn-add-choice fa fa-map-signs";
-	//btn_addChoice.textContent = "+";
 	btn_addChoice.onclick = function() {
-		var newChoice = { id: "choice",
+		jsonObject.choicesNumber++;
+		var newChoice = { id: jsonObject.id+"_choice"+jsonObject.choicesNumber,
 							name: "Choice",
 							content: [] };
-		jsonObject.choices.append(newChoice);
+		jsonObject.choices.push(newChoice);
 		addField(btn_addChoice, 'choice', newChoice);
 	};
 	situationContent.append(btn_addChoice);
@@ -63,6 +65,9 @@ function createChoice(jsonObject) {
 	var choiceHeader = document.createElement("div");
 	var choiceContent = document.createElement("div");
 
+	console.log("4");
+	console.log(jsonObject);
+
 	var btn_group = document.createElement("div");
 	var btn_addText = document.createElement("div");
 	var btn_addAction = document.createElement("div");
@@ -73,14 +78,14 @@ function createChoice(jsonObject) {
 		var newText = { type: "text",
 							condition: [],
 							content: "" };
-		jsonObject.choices.append(newText);
+		jsonObject.content.push(newText);
 		addField(btn_addText,'text', newText);
 	};
 	btn_addAction.className = "btn-add btn-add-action fa fa-cog";
 	btn_addAction.onclick = function() {
 		var newAction = { id: "action",
 							action: "" };
-		jsonObject.choices.append(newAction);
+		jsonObject.content.push(newAction);
 		addField(btn_addAction,'action', newAction);
 	};
 	btn_group.append(btn_addText);
@@ -104,6 +109,9 @@ function createText(jsonObject) {
 	var textHeader = document.createElement("div");
 	var textContent = createEditableField(jsonObject);
 
+	console.log("5");
+	console.log(jsonObject);
+
 	div.className = "text";
 	textHeader.className = "text-header"
 	div.append(textHeader);
@@ -117,8 +125,10 @@ function createEditableField(jsonObject) {
 
 	text.className = "text-field";
 	text.contentEditable = "true";
-	text.oninput = function (jsonObject) {
-		jsonObject.content = text.innerHTML;
+	text.oninput = function () {
+		jsonObject.content = text.innerHTML.replace(/<br>/gi,"\n");//.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+		//console.log("innerHTML : "+text.innerHTML.replace(/<br>/gi,"\n"));
+		//console.log("textContent : "+text.textContent);
 	}
 
 	return text;
@@ -127,6 +137,9 @@ function createEditableField(jsonObject) {
 function createAction(jsonObject) {
 	var div = document.createElement("div");
 	var select = document.createElement("select");
+
+	console.log("6");
+	console.log(jsonObject);
 
 	var actions = ['Action 1', 'Action 2', 'Action 3'];
 	actions.forEach(function(element) {
