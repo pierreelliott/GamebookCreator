@@ -1,0 +1,29 @@
+html, body, #main {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+}
+
+#image {
+	background-color: green;
+    -webkit-flex: 2;
+    flex: 2;
+}
+
+#text {
+	background-color: pink;
+    -webkit-flex: 1;
+    flex: 1;
+}
+
+.flex-container {
+    display: -webkit-flex;
+    display: flex;
+    text-align: center;
+	-webkit-flex-direction: column;
+    flex-direction: column;
+}
+.flex-item {
+	height: 100%;
+	width: 100%;
+}
