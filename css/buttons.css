@@ -1,5 +1,6 @@
 .btn-group * {
 	margin: 0.8vh 0.8vw;
+	cursor: auto;
 }
 
 .btn-add {
@@ -49,4 +50,9 @@
 }
 .fr.btn-add-situation:hover::after, .fr.btn-add-situation:focus::after {
 	content: " Ajouter une situation";
+}
+
+
+div[class*=btn] {
+	cursor: pointer;
 }
