@@ -3,121 +3,152 @@
 	"author": "Jane Doe",
 	"creationDate": "11-02-2011 23:11:32",
 	"lastModificationDate": "21-12-2012 12:12:00",
-	"startingSituation" : {
-		"content": [
-			{
-				"type": "text",
-				"content": ["I will tell you how my adventures started...."]
-			},
-			{
-				"type": "action",
-				"action": "changeSound",
-				"sound": "music01",
-				"opt": ["fade-in", "startWithNextAction"]
-			},
-			{
-				"type": "action",
-				"action": "changeBackground",
-				"image": "castle01",
-				"opt": ["fadeFromBlack"]
-			},
-			{
-				"type": "text",
-				"content": ["What do you want to hear first ?"]
-			}
-		],
-		"link": "situation1"
-	},
 	"situations": [
 		{
-			"id": "situation1",
+			"id": "startingSituation",
+			"content": [
+				{
+					"type": "text",
+					"content": ["I will tell you how my adventures started...."]
+				},
+				{
+					"type": "action",
+					"action": "changeSound",
+					"sound": "music01",
+					"opt": ["fade-in", "startWithNextAction"]
+				},
+				{
+					"type": "action",
+					"action": "changeBackground",
+					"image": "castle01",
+					"opt": ["fadeFromBlack"]
+				},
+				{
+					"type": "text",
+					"content": ["What do you want to hear first ?"]
+				}
+			],
 			"choices": [
 				{
 					"id": "choice001",
 					"name": "What's your name ?",
-					"content": [
-						{
-							"type": "text",
-							"content": [
-								"Well, that's pretty simple to start with. But I guess it's a good question.",
-								"My name is Bond, James Bond."
-								]
-						}
-					],
-					"link": "situation2"
+					"link": "situation1"
 				},
 				{
 					"id": "choice002",
 					"name": "Tell me everything !",
-					"content": [
-						{
-							"type": "text",
-							"content": [
-								"Oh ! You are pretty impatient. Don't you want to know my name first ?",
-								"So for your information my name is Bond, James Bond."
-								]
-						}
-					],
 					"link": "situation2"
 				}
 			]
 		},
 		{
-			"id": "situation2",
+			"id": "situation1",
+			"content": [
+				{
+					"type": "text",
+					"content": [
+						"Well, that's pretty simple to start with. But I guess it's a good question.",
+						"My name is Bond, James Bond."
+						]
+				}
+			],
 			"choices": [
 				{
 					"id": "choice014",
 					"name": "Isn't James Bond supposed to be russian ?",
-					"content": [
-						{
-							"type": "text",
-							"condition": ["neverChose_choice014"],
-							"content":
-								"What ? {playerNameCap} are you serious ?
-								James B... Haem, I am british."
-						},
-						{
-							"type": "text",
-							"condition": ["chose_choice014"],
-							"content": [
-								"Do you hear when I am talking ? I am british."
-							]
-						},
-						{
-							"type": "text",
-							"content": "Okay, forget it. Let's move on."
-						}
-					],
-					"link": "situation2"
+					"link": "situation3"
 				},
 				{
 					"id": "choice015",
 					"name": "Are you the real James Bond ?",
-					"content": [
-						{
-							"type": "action",
-							"action": "changeSound",
-							"sound": "prank-on-you",
-							"opt": ["startWithNextAction"]
-						},
-						{
-							"type": "text",
-							"content": "Well, actually... No."
-						},
-						{
-							"type": "action",
-							"action": "changeCharacter",
-							"character": "Roger Rabbit",
-							"opt": ["animationBuzz"]
-						},
-						{
-							"type": "text",
-							"content": "I got you !"
-						}
-					],
-					"link": "endSituation"
+					"link": "situation4"
 				}
 			]
+		},
+		{
+			"id": "situation2",
+			"content": [
+				{
+					"type": "text",
+					"content": [
+						"Oh ! You are pretty impatient. Don't you want to know my name first ?",
+						"So for your information my name is Bond, James Bond."
+						]
+				}
+			],
+			"choices": [
+				{
+					"id": "choice014",
+					"name": "Isn't James Bond supposed to be russian ?",
+					"link": "situation3"
+				},
+				{
+					"id": "choice015",
+					"name": "Are you the real James Bond ?",
+					"link": "situation4"
+				}
+			]
+		},
+		{
+			"id": "situation3",
+			"content": [
+				{
+					"type": "text",
+					"condition": ["neverChose_choice014"],
+					"content":
+						"What ? {playerNameCap} are you serious ?
+						James B... Haem, I am british."
+				},
+				{
+					"type": "text",
+					"condition": ["chose_choice014"],
+					"content": [
+						"Do you hear when I am talking ? I am british."
+					]
+				},
+				{
+					"type": "text",
+					"content": "Okay, forget it. Let's move on."
+				}
+			],
+			"choices": [
+				{
+					"id": "choice014",
+					"name": "Isn't James Bond supposed to be russian ?",
+					"link": "situation3"
+				},
+				{
+					"id": "choice015",
+					"name": "Are you the real James Bond ?",
+					"link": "situation4"
+				}
+			]
+		},
+		{
+			"id": "situation4",
+			"content": [
+				{
+					"type": "action",
+					"action": "changeSound",
+					"sound": "prank-on-you",
+					"opt": ["startWithNextAction"]
+				},
+				{
+					"type": "text",
+					"content": "Well, actually... No."
+				},
+				{
+					"type": "action",
+					"action": "changeCharacter",
+					"character": "Roger Rabbit",
+					"opt": ["animationBuzz"]
+				},
+				{
+					"type": "text",
+					"content": "I got you !"
+				}
+			],
+			"choices": []
 		}
 	],
 	"ressources": {
