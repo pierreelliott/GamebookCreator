@@ -6,7 +6,7 @@
 	padding: 0 2vw;
 	background-color: #f0f0f0;
 }
-#creationField > * {
+#creationField .situations > *, #creationField > * {
 	margin: 2vh 0;
 }
 

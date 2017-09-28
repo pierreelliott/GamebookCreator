@@ -36,5 +36,5 @@ window.onload = function() {
 		dlAnchorElem.setAttribute("href",     uri     );
 		dlAnchorElem.setAttribute("download", "MyStory.json");
 		dlAnchorElem.click();
-}
+	}
 };

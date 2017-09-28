@@ -1,5 +1,10 @@
-function InteractiveAdventure() {
-	this._constructor_.apply(this, args);
+window.onload = function () {
+	var placeholder = document.getElementById("creationField");
+	var creator = new InteractiveAdventure(placeholder);
+};
+
+function InteractiveAdventure(args) {
+	this._constructor_(args);
 }
 InteractiveAdventure.prototype = {
 	DOMelem: "",
@@ -19,33 +24,46 @@ InteractiveAdventure.prototype = {
 				sounds: []
 			}
 		};
-		this.DOMelem = this._createDOMelem_();
-		parent.append(DOMelem);
+		this._createDOMelem_(parent);
 	},
-	_createDOMelem_: function () {
+	_createDOMelem_: function (parent) {
+		var creatorField = document.createElement("div");
+		creatorField.className = "situations";
+		this.DOMelem = creatorField;
+		parent.append(creatorField);
+
 		var btn_addSituation = this._createBtn_AddSituation_();
+		parent.append(btn_addSituation);
 	},
 	_createBtn_AddSituation_: function () {
+		var storyobject = this.story;
+		var IASituations = this.situations;
+		var domElem = this.DOMelem;
+
 		var btn_addSituation = document.createElement("div");
 		btn_addSituation.className = "btn-add btn-add-situation fa fa-map-o";
 		btn_addSituation.onclick = function() {
-			var newSituation = { id: "situation"+story.situationsNumber,
+			var newSituation = { id: "situation"+storyobject.situationsNumber,
+								content: [],
 								choices: [],
 							 	choicesNumber: 0 };
-			story.situationsNumber++;
-			story.situations.push(newSituation);
-			this.situations.push(new Situation(DOMelem, newSituation));
+			storyobject.situationsNumber++;
+			storyobject.situations.push(newSituation);
+			IASituations.push(new Situation(domElem, newSituation));
 		};
 
 		return btn_addSituation;
 	},
 	save: function () {
 
+	},
+	print: function () {
+		console.log(this.story);
 	}
 }
 
 function Situation() {
-	this._constructor_.apply(this, args);
+	this._constructor_(arguments);
 }
 Situation.prototype = {
 	DOMelem: "",
@@ -55,10 +73,12 @@ Situation.prototype = {
 	content: [],
 	choices: [],
 
-	_constructor_: function (parent, jsonObject) {
+	_constructor_: function (arguments) {
+		var parent = arguments[0];
+		var jsonObject = arguments[1];
 		this.jsonObject = jsonObject;
 		this.DOMelem = this._createDOMelem_();
-		parent.append(DOMelem);
+		parent.append(this.DOMelem);
 	},
 	_createDOMelem_: function () {
 		var situation = document.createElement("div");
@@ -70,6 +90,7 @@ Situation.prototype = {
 
 		var situationContent = document.createElement("div");
 		situationContent.className = "situation-content";
+		this.DOMcontent = situationContent;
 
 		var situationButtons = document.createElement("div");
 		situationButtons.className = "situation-buttons";
@@ -80,6 +101,7 @@ Situation.prototype = {
 
 		var situationChoices = document.createElement("div");
 		situationChoices.className = "situation-choices";
+		this.DOMchoices = situationChoices;
 
 		var situationAddChoices = document.createElement("div");
 		situationAddChoices.className = "situation-addChoices";
@@ -93,12 +115,14 @@ Situation.prototype = {
 		situation.append(situationChoices);
 		situation.append(situationAddChoices);
 
-		this.DOMcontent = situationContent;
-		this.DOMchoices = situationChoices;
 
 		return situation;
 	},
 	_createBtn_AddChoice_: function () {
+		var jsonObject = this.jsonObject;
+		var choices = this.choices;
+		var domChoices = this.DOMchoices;
+
 		var btn_addChoice = document.createElement("div");
 		btn_addChoice.className = "btn-add btn-add-choice fa fa-map-signs";
 		btn_addChoice.onclick = function() {
@@ -106,32 +130,40 @@ Situation.prototype = {
 								name: "Choice",
 								content: [] };
 			jsonObject.choicesNumber++;
-			this.jsonObject.push();
-			this.choices.push(new Choice(DOMchoices));
+			jsonObject.push();
+			choices.push(new Choice(domChoices));
 		};
 
 		return btn_addChoice;
 	},
 	_createBtn_AddText_: function () {
+		var jsonObject = this.jsonObject;
+		var content = this.content;
+		var domContent = this.DOMcontent;
+
 		var btn_addText = document.createElement("div");
 		btn_addText.className = "btn-add btn-add-text fa fa-edit";
 		btn_addText.onclick = function() {
 			var newText = { type: "text",
 								content: "" };
-			this.jsonObject.push(newText);
-			this.content.push(new Textarea(DOMcontent, newText));
+			jsonObject.content.push(newText);
+			content.push(new Textarea(domContent, newText));
 		};
 
 		return btn_addText;
 	},
 	_createBtn_AddAction_: function () {
+		var jsonObject = this.jsonObject;
+		var content = this.content;
+		var domContent = this.DOMcontent;
+
 		var btn_addAction = document.createElement("div");
 		btn_addAction.className = "btn-add btn-add-action fa fa-cog";
 		btn_addAction.onclick = function() {
 			var newAction = { type: "action",
 								action: "" };
-			this.jsonObject.push(newAction);
-			this.content.push(new Action(DOMcontent, newAction));
+			jsonObject.content.push(newAction);
+			content.push(new Action(domContent, newAction));
 		};
 
 		return btn_addAction;
@@ -139,16 +171,18 @@ Situation.prototype = {
 }
 
 function Textarea() {
-	this._constructor_.apply(this, args);
+	this._constructor_(arguments);
 }
 Textarea.prototype = {
 	DOMelem: "",
 	jsonObject: "",
 
-	_constructor_: function (parent, jsonObject) {
+	_constructor_: function (arguments) {
+		var parent = arguments[0];
+		var jsonObject = arguments[1];
 		this.jsonObject = jsonObject;
 		this.DOMelem = this._createDOMelem_();
-		parent.append(DOMelem);
+		parent.append(this.DOMelem);
 	},
 	_createDOMelem_: function () {
 		var div = document.createElement("div");
@@ -163,6 +197,7 @@ Textarea.prototype = {
 		return div;
 	},
 	_createEditableField_: function () {
+		var jsonObject = this.jsonObject;
 		var text = document.createElement("div");
 
 		text.className = "text-field";
@@ -177,16 +212,18 @@ Textarea.prototype = {
 }
 
 function Action() {
-	this._constructor_.apply(this, args);
+	this._constructor_(arguments);
 }
 Action.prototype = {
 	DOMelem: "",
 	jsonObject: "",
 
-	_constructor_: function (parent, jsonObject) {
+	_constructor_: function (arguments) {
+		var parent = arguments[0];
+		var jsonObject = arguments[1];
 		this.jsonObject = jsonObject;
 		this.DOMelem = this._createDOMelem_();
-		parent.append(DOMelem);
+		parent.append(this.DOMelem);
 	},
 	_createDOMelem_: function () {
 		var div = document.createElement("div");
@@ -194,7 +231,12 @@ Action.prototype = {
 
 		var actions = ['Action 1', 'Action 2', 'Action 3'];
 		actions.forEach(function(element) {
-		  select.append(this._createActionsOptions_(element));
+			select.append(function (text) {
+				var option = document.createElement("option");
+				option.textContent = element;
+				option.value = element;
+				return option;
+			});
 		});
 
 		// select.onchange(...jsonObject.action = ...) -> update jsonObject
@@ -213,12 +255,14 @@ Action.prototype = {
 }
 
 function Choice() {
-	this._constructor_.apply(this, args);
+	this._constructor_(arguments);
 }
 Choice.prototype = {
 	DOMelem: "",
 
-	_constructor_: function (parent) {
+	_constructor_: function (arguments) {
+		var parent = arguments[0];
+		var jsonObject = arguments[1];
 		this.DOMelem = this._createDOMelem_();
 		parent.append(DOMelem);
 	},
