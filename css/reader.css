@@ -1,0 +1,14 @@
+html, body, #main {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+}
+
+#text {
+	background-color: pink;
+}
+
+#choices {
+	margin: 5vh 5vw;
+	text-align: center;
+}

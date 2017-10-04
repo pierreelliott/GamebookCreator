@@ -1,5 +1,6 @@
 .btn-group * {
 	margin: 0.8vh 0.8vw;
+	cursor: auto;
 }
 
 .btn-add {
@@ -10,43 +11,13 @@
 	border-radius: 0.5em;
 	display: inline-block;
 }
-.btn-add::after {
-    -webkit-transition: all 0.3s;
-    transition: all 0.3s;
-    -webkit-transition-delay: 1s;
-    transition-delay: 1s;
-}
-.btn-add:hover::after {
-    -webkit-transition-delay: 0s;
-    transition-delay: 0s;
-}
 .btn-add:hover {
 	cursor: pointer;
 	transition-delay: 0s;
+	width: auto;
 }
 
-.btn-add-text:hover::after {
-	content: " Add textarea";
-}
-.btn-add-action:hover::after, .btn-add-action:focus::after {
-	content: " Add action";
-}
-.btn-add-choice:hover::after, .btn-add-choice:focus::after {
-	content: " Add choice";
-}
-.btn-add-situation:hover::after, .btn-add-situation:focus::after {
-	content: " Add situation";
-}
-/* ========= */
-.fr.btn-add-text:hover::after, .fr.btn-add-text:focus::after {
-	content: " Ajouter une zone de texte";
-}
-.fr.btn-add-action:hover::after, .fr.btn-add-action:focus::after {
-	content: " Ajouter une action";
-}
-.fr.btn-add-choice:hover::after, .fr.btn-add-choice:focus::after {
-	content: " Ajouter un choix";
-}
-.fr.btn-add-situation:hover::after, .fr.btn-add-situation:focus::after {
-	content: " Ajouter une situation";
+
+div[class*=btn] {
+	cursor: pointer;
 }
