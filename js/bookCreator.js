@@ -1,6 +1,16 @@
 window.onload = function () {
 	var placeholder = document.getElementById("creationField");
 	var creator = new InteractiveAdventure(placeholder);
+
+	var btn_menuSave = document.getElementById("btn_menuSave");
+	btn_menuSave.onclick = function() {
+		var story = creator.save();
+		var uri = 'data:text/json;charset=utf8,' + encodeURIComponent(JSON.stringify(story));
+		var dlAnchorElem = document.getElementById('downloadAnchorElem');
+		dlAnchorElem.setAttribute("href",     uri     );
+		dlAnchorElem.setAttribute("download", story.name+".json");
+		dlAnchorElem.click();
+	}
 };
 
 function InteractiveAdventure(args) {
@@ -41,6 +51,7 @@ InteractiveAdventure.prototype = {
 		var domElem = this.DOMelem;
 
 		var btn_addSituation = document.createElement("div");
+		btn_addSituation.textContent = " Add situation";
 		btn_addSituation.className = "btn-add btn-add-situation fa fa-map-o";
 		btn_addSituation.onclick = function() {
 			var newSituation = { id: "situation"+storyobject.situationsNumber,
@@ -55,7 +66,8 @@ InteractiveAdventure.prototype = {
 		return btn_addSituation;
 	},
 	save: function () {
-
+		this.story.lastModificationDate = new Date();
+		return this.story;
 	},
 	print: function () {
 		console.log(this.story);
@@ -124,13 +136,14 @@ Situation.prototype = {
 		var domChoices = this.DOMchoices;
 
 		var btn_addChoice = document.createElement("div");
+		btn_addChoice.textContent = " Add choice";
 		btn_addChoice.className = "btn-add btn-add-choice fa fa-map-signs";
 		btn_addChoice.onclick = function() {
 			var newChoice = { id: jsonObject.id+"_choice"+jsonObject.choicesNumber,
 								name: "Choice",
 								content: [] };
 			jsonObject.choicesNumber++;
-			jsonObject.push();
+			jsonObject.choices.push(newChoice);
 			choices.push(new Choice(domChoices));
 		};
 
@@ -142,6 +155,7 @@ Situation.prototype = {
 		var domContent = this.DOMcontent;
 
 		var btn_addText = document.createElement("div");
+		btn_addText.textContent = " Add textarea";
 		btn_addText.className = "btn-add btn-add-text fa fa-edit";
 		btn_addText.onclick = function() {
 			var newText = { type: "text",
@@ -158,6 +172,7 @@ Situation.prototype = {
 		var domContent = this.DOMcontent;
 
 		var btn_addAction = document.createElement("div");
+		btn_addAction.textContent = " Add action";
 		btn_addAction.className = "btn-add btn-add-action fa fa-cog";
 		btn_addAction.onclick = function() {
 			var newAction = { type: "action",
@@ -259,14 +274,36 @@ function Choice() {
 }
 Choice.prototype = {
 	DOMelem: "",
+	jsonObject: "",
 
 	_constructor_: function (arguments) {
 		var parent = arguments[0];
-		var jsonObject = arguments[1];
+		this.jsonObject = arguments[1];
 		this.DOMelem = this._createDOMelem_();
-		parent.append(DOMelem);
+		parent.append(this.DOMelem);
 	},
 	_createDOMelem_: function () {
+		var div = document.createElement("div");
+		var choiceHeader = document.createElement("div");
+		var choiceContent = this._createEditableField_();
 
+		div.className = "choice";
+		choiceHeader.className = "choice-header"
+		div.append(choiceHeader);
+		div.append(choiceContent);
+
+		return div;
+	},
+	_createEditableField_: function () {
+		var jsonObject = this.jsonObject;
+		var text = document.createElement("div");
+
+		text.className = "choice-field";
+		text.contentEditable = "true";
+		text.oninput = function () {
+			this.jsonObject.name = text.innerHTML.replace(/<br>/gi,"\n");
+		}
+
+		return text;
 	}
 }
