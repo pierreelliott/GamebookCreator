@@ -3,6 +3,8 @@
 	"author": "Jane Doe",
 	"creationDate": "11-02-2011 23:11:32",
 	"lastModificationDate": "21-12-2012 12:12:00",
+	"type": "gamebook",
+	"startingSituation": "startingSituation",
 	"situations": [
 		{
 			"id": "startingSituation",
@@ -151,6 +153,7 @@
 			"choices": []
 		}
 	],
+	"situationsNumber": 5,
 	"ressources": {
 		"images": ["neutral-rabbit", "castle01", "strange_guy"],
 		"sounds": ["prank-on-you", "music01"],
