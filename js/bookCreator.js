@@ -73,7 +73,7 @@ InteractiveAdventure.prototype = {
 	},
 	load: function (storyToLoad) {
 		// Need an "algorithm" to recreate all components of the interface from an existing story
-	}
+	},
 	print: function () {
 		console.log(this.story);
 	}

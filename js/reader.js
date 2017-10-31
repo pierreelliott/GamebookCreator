@@ -1,8 +1,8 @@
 window.onload = function () {
 	var placeholder = document.getElementById("readerField");
-	var reader = new InteractiveAdventureReader(placeholder, story);
+	reader = new InteractiveAdventureReader(placeholder);
 
-	var btn_menuSave = document.getElementById("btn_menuSave");
+	/*var btn_menuSave = document.getElementById("btn_menuSave");
 	btn_menuSave.onclick = function() {
 		var story = reader.save();
 		var uri = 'data:text/json;charset=utf8,' + encodeURIComponent(JSON.stringify(story));
@@ -10,23 +10,18 @@ window.onload = function () {
 		dlAnchorElem.setAttribute("href",     uri     );
 		dlAnchorElem.setAttribute("download", story.name+".json");
 		dlAnchorElem.click();
-	};
+	};*/
 
 	function importSave(file) {
 		var levelToLoad = JSON.parse(file);
 		var checksum = levelToLoad.hash;
 		delete levelToLoad.hash;
-		if(checksum === hashCode(JSON.stringify(levelToLoad))) {
-			//console.log(document.getElementById(levelToLoad.levelid).onclick);
-			(document.getElementById(levelToLoad.levelid).onclick)(false);
-			//document.getElementById(levelToLoad.levelid).click(false);
-			levelToLoad.trace.forEach(function(obsel) {
-				var button = document.getElementById(obsel.group);
-				button.click();
-			});
-		} else {
-			window.alert(translate("save_notValid"));
-		}
+		(document.getElementById(levelToLoad.levelid).onclick)(false);
+		//document.getElementById(levelToLoad.levelid).click(false);
+		levelToLoad.trace.forEach(function(obsel) {
+			var button = document.getElementById(obsel.group);
+			button.click();
+		});
 	}
 
 
@@ -56,25 +51,26 @@ InteractiveAdventureReader.prototype = {
 	DOMelem: "",
 	savegame: "",
 	story: "",
-	mode: "",
+	mode: "visual-novel",
 
 	imageDOM: "",
 	optionDOM: "",
-	choicesDOM_NV: "",
+	choicesDOM_VN: "",
 	choicesDOM_GB: "",
 	characterDOM: "",
+	textHolderDOM: "",
 	textDOM: "",
 
 	_constructor_: function (arguments) {
 		var parent = arguments[0];
-		var story = arguments[1];
-		this.story = story;
+		//var story = arguments[1];
+		//this.story = story;
 		this.savegame = {
 			storyID: "My Story",
 			firstPlayDate: new Date(),
 			lastPlayDate: new Date(),
 			choices: [],
-			currentSituation: story.startingSituation,
+			currentSituation: "story.startingSituation",
 			currentChild: -1,
 			currentLine: -1
 		};
@@ -83,6 +79,7 @@ InteractiveAdventureReader.prototype = {
 	_createDOMelem_: function (parent) {
 		var readerField = document.createElement("div");
 		readerField.id = "reader";
+		readerField.className = "visual-novel";
 
 		var image = document.createElement("div");
 		image.id = "readerImage";
@@ -92,9 +89,9 @@ InteractiveAdventureReader.prototype = {
 		option.id = "readerOption";	// Name will probably change
 		this.optionDOM = option;
 
-		var choices_NV = document.createElement("div");
-		choices_NV.id = "readerChoices_NV";
-		this.choicesDOM_NV = choices_NV;
+		var choices_VN = document.createElement("div");
+		choices_VN.id = "readerChoices_VN";
+		this.choicesDOM_VN = choices_VN;
 
 		var choices_GB = document.createElement("div");
 		choices_GB.id = "readerChoices_GB";
@@ -103,15 +100,20 @@ InteractiveAdventureReader.prototype = {
 		var text = document.createElement("div");
 		text.id = "readerText";
 		this.textDOM = text;
+		
+		var textHolder = document.createElement("div");
+		textHolder.id = "readerTextHolder";
+		this.textHolderDOM = textHolder;
 
 		var character = document.createElement("div");
 		character.id = "readerCharacter";
 		this.characterDOM = character;
 
 		image.append(option);
-		image.append(choices_NV);
+		image.append(choices_VN);
 		image.append(text);
 		text.append(character);
+		text.append(textHolder);
 		text.append(choices_GB);
 		readerField.append(image);
 
@@ -130,6 +132,47 @@ InteractiveAdventureReader.prototype = {
 		// Bla bla bla
 		return div;
 	},
+	changeMode: function (mode) {
+		switch(mode) {
+			case "gamebook":
+				this.mode = "gamebook";
+				this.DOMelem.classList.toggle("visual-novel",false);
+				this.DOMelem.classList.toggle("gamebook",true);
+				break;
+			case "visual-novel":
+				this.mode = "visual-novel";
+				this.DOMelem.classList.toggle("visual-novel",true);
+				this.DOMelem.classList.toggle("gamebook",false);
+				break;
+		}
+	},
+	dummyChoices: function () {
+		var createChoiceDOMFunction = this._createChoiceDOM_;
+		var choices = [{
+					id: "choice001",
+					name: "What's your name ?",
+					link: "situation1"
+				},
+				{
+					id: "choice002",
+					name: "Tell me everything !",
+					link: "situation2"
+				}];
+		switch (this.mode) {
+			case "gamebook":
+				parent = this.choicesDOM_GB;
+				break;
+			case "visual-novel":
+				parent = this.choicesDOM_VN;
+				this.toggleCharAndText();
+				break;
+			default:
+		}
+		choices.forEach(function(e) {
+			var choiceElem = createChoiceDOMFunction(e);
+			parent.append(choiceElem);
+		});
+	},
 	displayChoices: function () {
 		// Don't forget verifications
 		var createChoiceDOMFunction = this._createChoiceDOM_;
@@ -139,7 +182,7 @@ InteractiveAdventureReader.prototype = {
 				parent = this.choicesDOM_GB;
 				break;
 			case "visual-novel":
-				parent = this.choicesDOM_NV;
+				parent = this.choicesDOM_VN;
 				this.toggleCharAndText();
 				break;
 			default:
@@ -154,12 +197,14 @@ InteractiveAdventureReader.prototype = {
 	},
 	toggleCharAndText: function () {
 		// Should try to do transition with opacity first and then, hide them completely
-		if(this.textDOM.style.display == "none" && this.characterDOM.style.display == "none") {
-			this.textDOM.style.display = "none";
-			this.characterDOM.style.display = "none";
+		if(this.textDOM.style.zIndex == -1 && this.characterDOM.style.zIndex == -1) {
+			this.textDOM.style.zIndex = 1;
+			//this.characterDOM.style.zIndex = 1;
+			this.choicesDOM_VN.zIndex = -1;
 		} else {
-			this.textDOM.style.display = "auto";
-			this.characterDOM.style.display = "auto";
+			this.textDOM.style.zIndex = -1;
+			this.characterDOM.style.zIndex = -1;
+			this.choicesDOM_VN.zIndex = 1;
 		}
 	},
 
@@ -235,7 +280,10 @@ InteractiveAdventureReader.prototype = {
 			this.savegame.currentSituation = choiceObject.link;
 			this.savegame.currentChild = -1;
 			this.savegame.currentLine = -1;
-			this.savegame.choices.push(choiceObject.id);
+			this.savegame.choices.push({
+				id : choiceObject.id,
+				date: new Date()
+			});
 
 			// Hide choice panel
 			// Un-hide character and text panel

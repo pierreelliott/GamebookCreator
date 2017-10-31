@@ -1,14 +1,84 @@
-html, body, #main {
+html, body, #readerField {
 	width: 100%;
 	height: 100%;
 	margin: 0;
 }
 
-#text {
-	background-color: pink;
+#readerField {
+	position: relative;
 }
 
-#choices {
-	margin: 5vh 5vw;
-	text-align: center;
+#reader, #readerImage {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+}
+
+#reader.visual-novel #readerOption, #reader.visual-novel #readerChoices_GB {
+	display: none;
+}
+#reader.gamebook #readerOption, #reader.gamebook #readerCharacter, #reader.gamebook #readerChoices_VN {
+	display: none;
+}
+
+/* ============= Visual-novel =================== */
+#reader.visual-novel #readerChoices_VN {
+	
+}
+#reader.visual-novel .choice {
+	width: 92%;
+	min-height: 5%;
+	/*margin: 4%;*/
+}
+#reader.visual-novel #readerText {
+	width: 98%;
+	height: 35%;
+	margin: 1% 1%;
+	position: absolute;
+	bottom: 0px;
+}
+#reader.visual-novel #readerCharacter {
+	height: 15%;
+	margin: 1%;
+}
+#reader.visual-novel #readerTextHolder {
+	height: 80%;
+	margin: 1%;
+}
+
+/* ================= Gamebook ================== */
+#reader.gamebook #readerText {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+}
+#reader.gamebook #readerTextHolder, #reader.gamebook #readerChoices_GB {
+	width: 94%;
+	min-height: 5%;
+	margin: 3%;
+}
+#reader.gamebook .choice {
+	width: 92%;
+	min-height: 5%;
+	margin: 4%;
+}
+
+/* =================== Tests ====================== */
+#readerImage {
+	background-color: pink;
+}
+#readerText {
+	background-color: green;
+}
+#readerCharacter {
+	background-color: blue;
+}
+#readerTextHolder {
+	background-color: yellow;
+}
+#readerChoices_GB, #readerChoices_VN {
+	background-color: gray;
+}
+.choice {
+	background-color: light-purple;
 }
