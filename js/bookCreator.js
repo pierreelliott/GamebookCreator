@@ -27,6 +27,8 @@ InteractiveAdventure.prototype = {
 			author: "default",
 			creationDate: new Date(),
 			lastModificationDate: new Date(),
+			type: "gamebook",
+			startingSituation: "",
 			situations: [],
 			situationsNumber: 0,
 			ressources: {
@@ -68,6 +70,9 @@ InteractiveAdventure.prototype = {
 	save: function () {
 		this.story.lastModificationDate = new Date();
 		return this.story;
+	},
+	load: function (storyToLoad) {
+		// Need an "algorithm" to recreate all components of the interface from an existing story
 	},
 	print: function () {
 		console.log(this.story);
@@ -218,8 +223,11 @@ Textarea.prototype = {
 		text.className = "text-field";
 		text.contentEditable = "true";
 		text.oninput = function () {
-			jsonObject.content = text.innerHTML.replace(/<br>/gi,"\n");//.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-			// Need to handle the separation in multiple lines in the array (-> .split("\n") ?)
+			jsonObject.content = text.innerHTML.replace(/<br>/gi,"\n").split("\n");//.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+			if(jsonObject.content[jsonObject.content.length-1] == "") {
+				jsonObject.content.length--; // Remove the last object of the array
+											// Apparently there's always a last <BR> that goes there
+			}
 		}
 
 		return text;
@@ -246,12 +254,11 @@ Action.prototype = {
 
 		var actions = ['Action 1', 'Action 2', 'Action 3'];
 		actions.forEach(function(element) {
-			select.append(function (text) {
-				var option = document.createElement("option");
-				option.textContent = element;
-				option.value = element;
-				return option;
-			});
+			var option = document.createElement("option");
+			option.textContent = element;
+			option.value = element;
+
+			select.append(option);
 		});
 
 		// select.onchange(...jsonObject.action = ...) -> update jsonObject
