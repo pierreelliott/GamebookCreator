@@ -1,6 +1,6 @@
 window.onload = function () {
 	var placeholder = document.getElementById("readerField");
-	reader = new InteractiveAdventureReader(placeholder);
+	var reader = new InteractiveAdventureReader(placeholder);
 
 	/*var btn_menuSave = document.getElementById("btn_menuSave");
 	btn_menuSave.onclick = function() {
