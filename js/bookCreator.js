@@ -13,6 +13,82 @@ window.onload = function () {
 	}
 };
 
+class InteractiveAdventure {
+	constructor(parentElem) {
+		this.model = new InteractiveAdventureModel();
+		this.view = new InteractiveAdventureView(parentElem);
+	}
+	
+	getName() {	return this.model.getName(); }
+	setName(newName) { this.model.setName(newName); }
+	
+	getAuthor() { return this.model.getAuthor(); }
+	setAuthor(newAuthor) { this.model.setAuthor(newAuthor); }
+	
+	getCreationDate() { return this.model.getCreationDate(); }
+	
+	getLastModificationDate() { return this.model.getLastModificationDate(); }
+	
+	getType() { return this.model.getType(); }
+	setType(newType) { this.model.setType(newType); }
+	
+	getStartingSituation() { return this.model.getStartingSituation(); }
+	setStartingSituation(situation) { this.model.setStartingSituation(situation); }
+	
+	getSituations() { return this.model.getSituations(); }
+	addSituation(situation) { this.model.addSituation(situation); }
+	removeSituation(situation) { this.model.removeSituation(situation); }
+	
+	getSituationCount() { return this.model.getSituationCount(); }
+}
+
+class InteractiveAdventureModel {
+	constructor() {
+		this.name = "My Story";
+		this.author = "default";
+		this.creationDate = new Date();
+		this.lastModificationDate = new Date();
+		this.type = "gameook";
+		this.startingSituation = "";
+		this.situations = [];
+		this.situationsNumber = 0;
+		this.ressources = {
+			/* À repenser pour faciliter et abstraire
+				la gestion des ressources */
+			res_images: [],
+			res_sounds: []
+		}
+	}
+	getName() {	return this.name; }
+	setName(newName) { this.name = newName; }
+	
+	getAuthor() { return this.author; }
+	setAuthor(newAuthor) { this.author = newAuthor };
+	
+	getCreationDate() { return this.creationDate; }
+	
+	getLastModificationDate() { return this.lastModificationDate; }
+	modification() { this.lastModificationDate = new Date(); }
+	
+	getType() { return this.type; }
+	setType(newType) { this.type = newType; }
+	
+	getStartingSituation() { return this.startingSituation; }
+	setStartingSituation(situation) { this.startingSituation = situation; }
+	
+	getSituations() { return this.situations; }
+	addSituation(situation) { this.situations.add(situation); }
+	removeSituation(situation) { this.situations.remove(situation); }
+	
+	getSituationCount() { return this.situationsNumber; }
+}
+
+class InteractiveAdventureView {
+	constructor(parentElem) {
+		
+	}
+}
+
 function InteractiveAdventure(args) {
 	this._constructor_(args);
 }
@@ -77,6 +153,159 @@ InteractiveAdventure.prototype = {
 	print: function () {
 		console.log(this.story);
 	}
+}
+
+class Situation {
+	constructor(model, view) {
+		this.model = model;
+		this.view = view;
+	}
+	
+	/* How to add an element
+	/!\ Element class should not be used /!\
+	
+	addElement() {
+		var model = new ElementModel(typeElem);
+		var view = new ElementView(this.getDOM());
+		var elementObj = new Element(parentO, model, view);
+	}*/
+	addText() {
+		var model = new TextModel(parentObject);
+		var view = new TextView(this.getDOM());
+		var controller = new Text(model, view);
+		this.model.addElement(controller);
+	}
+	addAction() {
+		var model = new ActionModel(parentObject);
+		var view = new ActionView(this.getDOM());
+		var controller = new Action(model, view);
+		this.model.addElement(controller);
+	}
+	addChoice() {
+		var model = new ChoiceModel(parentObject);
+		var view = new ChoiceView(this.getDOM());
+		var controller = new Choice(model, view);
+		this.model.addChoice(controller);
+	}
+}
+class SituationModel {
+	
+}
+class SituationView {
+	
+}
+
+class Element {
+	constructor(parentObject, model, view) {
+		this.model = model;
+		this.view = view;
+	}
+}
+class ElementModel {
+	constructor(parentObject, typeElem) {
+		this.parentObject = parentObject;
+		this.type = typeElem;
+		this.conditions = [];
+	}
+	getType() { return this.model.getType(); }
+	getParent() { return this.model.getParentObject(); }
+	
+	getConditions() {  }
+	setConditions() {  }
+	removeCondition(index) {  }
+	addCondition(newCondition) {  }
+	hasCondition() {  }
+}
+class ElementView {
+	constructor(parentDOM) {
+		this.parentElement = parentDOM;
+		this.DOMElement = "";
+	}
+	getDOM() { return this.view.getDOM(); }
+	getParentDOM() { return this.view.getParentDOM(); }
+}
+
+class Text extends Element {
+	
+}
+class TextModel extends ElementModel {
+	constructor(parentObject) {
+		super(parentObject, "text");
+		this.content = [];
+	}
+	getText() { return this.content; }
+	setText(newText) {
+		if(true) { // if newText is array
+			this.content = newText.split("\n");
+		} else {
+			this.content = newText;
+		}
+	}
+	
+}
+class TextView extends ElementView {
+	createDOMElem() {
+		var div = document.createElement("div");
+		var textHeader = document.createElement("div");
+		var textContent = this._createEditableField_();
+
+		div.className = "text";
+		textHeader.className = "text-header"
+		div.append(textHeader);
+		div.append(textContent);
+
+		this.DOMElement = div;
+		
+		return div;
+	}
+	createEditableField() {
+		/* Editable field isn't very easy to deal with
+			so we should use a textarea instead */
+		var jsonObject = this.jsonObject;
+		var textField = document.createElement("div");
+
+		textField.className = "text-field";
+		textField.contentEditable = "true";
+		textField.oninput = function () {
+			jsonObject.content = textField.innerHTML.replace(/<br>/gi,"\n").split("\n");
+			if(jsonObject.content[jsonObject.content.length-1] == "") {
+				jsonObject.content.length--; // Remove the last object of the array
+											// Apparently there's always a last <BR> that goes there
+			}
+		}
+
+		return textField;
+	}
+}
+
+class Action extends Element {	
+	getAvailableActions() {}
+}
+class ActionModel extends ElementModel {
+	constructor(parentObject) {
+		super(parentObject, "action");
+		this.action = "";
+		this.properties = new Map();
+	}
+	getAction() {  }
+	setAction(newAction) {  }
+}
+class ActionView extends ElementView {
+	
+}
+
+class Choice extends Element {
+	
+}
+class ChoiceModel extends ElementModel {
+	constructor(parentObject) {
+		super(parentObject, "choice");
+		this.name = "";
+		this.situationLink = "";
+	}
+}
+class ChoiceView extends ElementView {
+	
 }
 
 function Situation() {
