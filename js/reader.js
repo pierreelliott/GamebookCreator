@@ -215,7 +215,7 @@ InteractiveAdventureReader.prototype = {
 	load: function (savegameFile) {
 		// Do some verification on the savegame
 		this.savegame = savegameFile;
-		this.init();
+		this.start();
 	},
 	print: function () {
 		console.log(this.savegame);
@@ -224,6 +224,8 @@ InteractiveAdventureReader.prototype = {
 		if(this.savegame.currentSituation !== undefined && this.story.situations[this.savegame.currentSituation] !== undefined
 		&& this.savegame.currentChild !== undefined && this.story.situations[this.savegame.currentSituation].content[this.savegame.currentChild] !== undefined) {
 			// Display the current child of the current situation
+		} else {
+			
 		}
 	},
 	display: function (typeOfData, data) {

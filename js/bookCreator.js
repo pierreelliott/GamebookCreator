@@ -145,8 +145,8 @@ Situation.prototype = {
 		btn_addChoice.className = "btn-add btn-add-choice fa fa-map-signs";
 		btn_addChoice.onclick = function() {
 			var newChoice = { id: jsonObject.id+"_choice"+jsonObject.choicesNumber,
-								name: "Choice",
-								content: [] };
+								name: "",
+								link: "" };
 			jsonObject.choicesNumber++;
 			jsonObject.choices.push(newChoice);
 			choices.push(new Choice(domChoices));
@@ -292,23 +292,24 @@ Choice.prototype = {
 	_createDOMelem_: function () {
 		var div = document.createElement("div");
 		var choiceHeader = document.createElement("div");
-		var choiceContent = this._createEditableField_();
+		var choiceName = this._createEditableField_();
+		var choiceLink = this._createEditableField_();
 
 		div.className = "choice";
 		choiceHeader.className = "choice-header"
 		div.append(choiceHeader);
-		div.append(choiceContent);
+		div.append(choiceName);
+		div.append(choiceLink);
 
 		return div;
 	},
 	_createEditableField_: function () {
 		var jsonObject = this.jsonObject;
-		var text = document.createElement("div");
+		var text = document.createElement("textarea");
 
-		text.className = "choice-field";
-		text.contentEditable = "true";
+		/*text.type = "text";*/
 		text.oninput = function () {
-			this.jsonObject.name = text.innerHTML.replace(/<br>/gi,"\n");
+			this.jsonObject.name = text.textContent;
 		}
 
 		return text;
