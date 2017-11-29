@@ -14,43 +14,66 @@ window.onload = function () {
 };
 
 class InteractiveAdventure {
-	constructor(parentElem) {
-		this.model = new InteractiveAdventureModel();
-		this.view = new InteractiveAdventureView(parentElem);
+	constructor(parentDOM) {
+		this.model = new InteractiveAdventureModel(this);
+		this.view = new InteractiveAdventureView(this, parentDOM);
 	}
-	
+
+	loadFile(file) {
+		this.model.loadFile(file);
+		/* Need to initialize the view too */
+	}
+
+	getDOM() { return this.view.getDOM(); }
+
 	getName() {	return this.model.getName(); }
-	setName(newName) { this.model.setName(newName); }
-	
+	//setName(newName) { this.model.setName(newName); }
+
 	getAuthor() { return this.model.getAuthor(); }
-	setAuthor(newAuthor) { this.model.setAuthor(newAuthor); }
-	
+	//setAuthor(newAuthor) { this.model.setAuthor(newAuthor); }
+
 	getCreationDate() { return this.model.getCreationDate(); }
-	
+
 	getLastModificationDate() { return this.model.getLastModificationDate(); }
-	
+
 	getType() { return this.model.getType(); }
-	setType(newType) { this.model.setType(newType); }
-	
+	//setType(newType) { this.model.setType(newType); }
+
 	getStartingSituation() { return this.model.getStartingSituation(); }
-	setStartingSituation(situation) { this.model.setStartingSituation(situation); }
-	
+	//setStartingSituation(situation) { this.model.setStartingSituation(situation); }
+
 	getSituations() { return this.model.getSituations(); }
-	addSituation(situation) { this.model.addSituation(situation); }
-	removeSituation(situation) { this.model.removeSituation(situation); }
-	
+	createSituation() {
+		// Create the variable here to be able to refer to it before its actual creation
+		var newSituation;
+
+		/* I give a reference to the controller to the model and the view so when
+			something is out of their usecase, they call the controller instead	*/
+		var situationModel = new SituationModel(newSituation, this.model.incrementSituationCount());
+		var situationView = new SituationView(newSituation, this.getDOM());
+
+		/* Only the controller get a reference on its parent element */
+		newSituation = new Situation(this, situationModel, situationView);
+
+		this.model.addSituation(newSituation); // Add the new situation object to the model
+	}
+	/*addSituation(situation) { this.model.addSituation(situation); }
+	removeSituation(situation) { this.model.removeSituation(situation); }*/
+
 	getSituationCount() { return this.model.getSituationCount(); }
 }
-
 class InteractiveAdventureModel {
-	constructor() {
+	constructor(controller) {
+		this.controller = controller;
+
 		this.name = "My Story";
 		this.author = "default";
 		this.creationDate = new Date();
 		this.lastModificationDate = new Date();
 		this.type = "gameook";
 		this.startingSituation = "";
-		this.situations = [];
+		this.situations = []; /* Should change this to a Map,
+		it will be easier to change a situation's ID */
 		this.situationsNumber = 0;
 		this.ressources = {
 			/* À repenser pour faciliter et abstraire
@@ -59,174 +82,309 @@ class InteractiveAdventureModel {
 			res_sounds: []
 		}
 	}
+
+	toString() {
+		var file = {};
+		file.name = this.name;
+		file.author = this.author;
+		file.creationDate = this.creationDate;
+		file.lastModificationDate = this.lastModificationDate;
+		file.type = this.type;
+		file.startingSituation = this.startingSituation;
+		file.situations = this.situations.forEach(function(situ) {
+			return situ.toString();
+		});
+		file.situationsNumber = this.situationsNumber;
+	}
+
+	loadFile(file) {
+		this.name = file.name;
+		this.author = file.author;
+		this.creationDate = file.creationDate;
+		this.lastModificationDate = file.lastModificationDate;
+		this.type = file.type;
+		this.startingSituation = file.startingSituation;
+		this.situations = file.situations.forEach(function (situ) {
+			/* Need to recreate an object Situation and store it */
+		});
+		this.situationsNumber = file.situationsNumber;
+		/* this.ressources = file.ressources; */
+	}
+
 	getName() {	return this.name; }
 	setName(newName) { this.name = newName; }
-	
+
 	getAuthor() { return this.author; }
 	setAuthor(newAuthor) { this.author = newAuthor };
-	
+
 	getCreationDate() { return this.creationDate; }
-	
+
 	getLastModificationDate() { return this.lastModificationDate; }
 	modification() { this.lastModificationDate = new Date(); }
-	
+
 	getType() { return this.type; }
 	setType(newType) { this.type = newType; }
-	
+
 	getStartingSituation() { return this.startingSituation; }
 	setStartingSituation(situation) { this.startingSituation = situation; }
-	
+
 	getSituations() { return this.situations; }
 	addSituation(situation) { this.situations.add(situation); }
 	removeSituation(situation) { this.situations.remove(situation); }
-	
+
 	getSituationCount() { return this.situationsNumber; }
+	incrementSituationCount() { return this.situationsNumber++; }
 }
-
 class InteractiveAdventureView {
-	constructor(parentElem) {
-		
+	constructor(controller, parentDOM) {
+		this.parentDOM = parentDOM;
+		this.controller = controller;
+		this.DOMElement;
+		this.createDOM();
 	}
-}
 
-function InteractiveAdventure(args) {
-	this._constructor_(args);
-}
-InteractiveAdventure.prototype = {
-	DOMelem: "",
-	story: "",
-	situations: [],
+	getDOM() { return this.DOMelement; }
 
-	_constructor_: function (parent) {
-		this.story = {
-			name: "My Story",
-			author: "default",
-			creationDate: new Date(),
-			lastModificationDate: new Date(),
-			type: "gamebook",
-			startingSituation: "",
-			situations: [],
-			situationsNumber: 0,
-			ressources: {
-				images: [],
-				sounds: []
-			}
-		};
-		this._createDOMelem_(parent);
-	},
-	_createDOMelem_: function (parent) {
+	createDOM() {
 		var creatorField = document.createElement("div");
 		creatorField.className = "situations";
-		this.DOMelem = creatorField;
-		parent.append(creatorField);
+		this.DOMElement = creatorField;
+		this.parentDOM.append(creatorField);
 
-		var btn_addSituation = this._createBtn_AddSituation_();
-		parent.append(btn_addSituation);
-	},
-	_createBtn_AddSituation_: function () {
-		var storyobject = this.story;
-		var IASituations = this.situations;
-		var domElem = this.DOMelem;
+		var btn_addSituation = this.createBtn_AddSituation();
+		this.parentDOM.append(btn_addSituation);
+	}
 
+	createBtn_AddSituation() {
 		var btn_addSituation = document.createElement("div");
 		btn_addSituation.textContent = " Add situation";
 		btn_addSituation.className = "btn-add btn-add-situation fa fa-map-o";
-		btn_addSituation.onclick = function() {
-			var newSituation = { id: "situation"+storyobject.situationsNumber,
-								content: [],
-								choices: [],
-							 	choicesNumber: 0 };
-			storyobject.situationsNumber++;
-			storyobject.situations.push(newSituation);
-			IASituations.push(new Situation(domElem, newSituation));
-		};
+		btn_addSituation.onclick = this.controller.createSituation();
 
 		return btn_addSituation;
-	},
-	save: function () {
-		this.story.lastModificationDate = new Date();
-		return this.story;
-	},
-	load: function (storyToLoad) {
-		// Need an "algorithm" to recreate all components of the interface from an existing story
-	},
-	print: function () {
-		console.log(this.story);
 	}
 }
 
+
 class Situation {
-	constructor(model, view) {
+	constructor(parentElem, model, view) {
+		this.parentElement = parentElem;
 		this.model = model;
 		this.view = view;
 	}
-	
-	/* How to add an element
-	/!\ Element class should not be used /!\
-	
-	addElement() {
-		var model = new ElementModel(typeElem);
-		var view = new ElementView(this.getDOM());
-		var elementObj = new Element(parentO, model, view);
-	}*/
+
+	getParent() { return this.parentElement; }
+
 	addText() {
-		var model = new TextModel(parentObject);
-		var view = new TextView(this.getDOM());
-		var controller = new Text(model, view);
+		var controller;
+		var model = new TextModel(controller);
+		var view = new TextView(this.view.getDOMContent());
+		controller = new Text(model, view);
 		this.model.addElement(controller);
 	}
 	addAction() {
-		var model = new ActionModel(parentObject);
-		var view = new ActionView(this.getDOM());
-		var controller = new Action(model, view);
+		var controller;
+		var model = new ActionModel(controller);
+		var view = new ActionView(this.view.getDOMContent());
+		controller = new Action(model, view);
 		this.model.addElement(controller);
 	}
+
 	addChoice() {
-		var model = new ChoiceModel(parentObject);
-		var view = new ChoiceView(this.getDOM());
-		var controller = new Choice(model, view);
+		var controller;
+		var model = new ChoiceModel(controller);
+		var view = new ChoiceView(controller, this.view.getDOMChoices());
+		controller = new Choice(this, model, view);
 		this.model.addChoice(controller);
 	}
 }
 class SituationModel {
-	
+	constructor(controller, id) {
+		this.id = "situation"+id;
+		this.controller = controller;
+		this.content = [];
+		this.choices = [];
+		this.choicesNumber = 0;
+	}
+
+	addElement(newElement) {
+		this.content.add(newElement);
+	}
+
+	addChoice(newChoice) {
+		this.choices.add(newChoice);
+	}
 }
 class SituationView {
-	
+	constructor(controller, parentDOM) {
+		this.parentDOM = parentDOM;
+		this.controller = controller;
+		this.DOMElement;
+		this.DOMChoices;
+		this.DOMContent;
+		this.createDOM();
+	}
+
+	createDOM() {
+		var situation = document.createElement("div");
+
+		var situationHeader = document.createElement("div");
+		situationHeader.className = "situation-header";
+		situationHeader.textContent = "Situation";
+		situationHeader.onclick = function() { toggleDisplay(situationHeader); };
+
+		var situationContent = document.createElement("div");
+		situationContent.className = "situation-content";
+		this.DOMContent = situationContent;
+
+		var situationButtons = document.createElement("div");
+		situationButtons.className = "situation-buttons";
+		var btn_addText = this.createBtn_AddText();
+		var btn_addAction = this.createBtn_AddAction();
+		situationButtons.append(btn_addText);
+		situationButtons.append(btn_addAction);
+
+		var situationChoices = document.createElement("div");
+		situationChoices.className = "situation-choices";
+		this.DOMChoices = situationChoices;
+
+		var situationAddChoices = document.createElement("div");
+		situationAddChoices.className = "situation-addChoices";
+		var btn_addChoice = this.createBtn_AddChoice();
+		situationAddChoices.append(btn_addChoice);
+
+		situation.className = "situation active";
+		situation.append(situationHeader);
+		situation.append(situationContent);
+		situation.append(situationButtons);
+		situation.append(situationChoices);
+		situation.append(situationAddChoices);
+
+		this.DOMElement = situation;
+	}
+
+	getDOM() { return this.DOMElement; }
+	getDOMChoices() { return this.DOMChoices; }
+	getDOMContent() { return this.DOMContent; }
+
+	createBtn_AddChoice() {
+		var jsonObject = this.jsonObject;
+		var choices = this.choices;
+		var domChoices = this.DOMchoices;
+
+		var btn_addChoice = document.createElement("div");
+		btn_addChoice.textContent = " Add choice";
+		btn_addChoice.className = "btn-add btn-add-choice fa fa-map-signs";
+		btn_addChoice.onclick = this.controller.addChoice();
+
+		function() {
+			var newChoice = { id: jsonObject.id+"_choice"+jsonObject.choicesNumber,
+								name: "",
+								link: "" };
+			jsonObject.choicesNumber++;
+			jsonObject.choices.push(newChoice);
+			choices.push(new Choice(domChoices));
+		};
+
+		return btn_addChoice;
+	}
+
+	createBtn_AddText() {
+		var jsonObject = this.jsonObject;
+		var content = this.content;
+		var domContent = this.DOMcontent;
+
+		var btn_addText = document.createElement("div");
+		btn_addText.textContent = " Add textarea";
+		btn_addText.className = "btn-add btn-add-text fa fa-edit";
+		btn_addText.onclick = function() {
+			var newText = { type: "text",
+								content: "" };
+			jsonObject.content.push(newText);
+			content.push(new Textarea(domContent, newText));
+		};
+
+		return btn_addText;
+	}
+
+	createBtn_AddAction() {
+		var jsonObject = this.jsonObject;
+		var content = this.content;
+		var domContent = this.DOMcontent;
+
+		var btn_addAction = document.createElement("div");
+		btn_addAction.textContent = " Add action";
+		btn_addAction.className = "btn-add btn-add-action fa fa-cog";
+		btn_addAction.onclick = function() {
+			var newAction = { type: "action",
+								action: "" };
+			jsonObject.content.push(newAction);
+			content.push(new Action(domContent, newAction));
+		};
+
+		return btn_addAction;
+	}
 }
 
 class Element {
 	constructor(parentObject, model, view) {
+		this.parentElement = parentObject;
 		this.model = model;
 		this.view = view;
 	}
+	getType() { return this.model.getType(); }
+	getParent() { return this.parentElement; }
+
+	getConditions() { return this.model.getConditions(); }
+	setConditions() {  }
+	removeCondition(index) { this.model.removeCondition(index); }
+	addCondition(newCondition) { this.model.addCondition(newCondition); }
+	hasCondition() { return this.model.hasCondition(); }
 }
 class ElementModel {
-	constructor(parentObject, typeElem) {
-		this.parentObject = parentObject;
+	constructor(controller, typeElem) {
+		this.controller = controller;
 		this.type = typeElem;
 		this.conditions = [];
 	}
-	getType() { return this.model.getType(); }
-	getParent() { return this.model.getParentObject(); }
-	
+	getType() { return this.type; }
+
 	getConditions() {  }
 	setConditions() {  }
 	removeCondition(index) {  }
 	addCondition(newCondition) {  }
-	hasCondition() {  }
+	hasCondition() { return (this.conditions.length > 0); }
 }
 class ElementView {
-	constructor(parentDOM) {
-		this.parentElement = parentDOM;
+	constructor(controller, parentDOM) {
+		this.controller = controller;
+		this.parentDOM = parentDOM;
 		this.DOMElement = "";
 	}
-	getDOM() { return this.view.getDOM(); }
-	getParentDOM() { return this.view.getParentDOM(); }
+	getDOM() { return this.DOMelement; }
+	getParentDOM() { return this.parentDOM; }
+}
+
+class Choice extends Element {
+	constructor(parentObject,model,view) {
+		super(parentObject,model,view);
+	}
+}
+class ChoiceModel extends ElementModel {
+	constructor(controller) {
+		super(controller, "choice");
+		this.name = "";
+		this.situationLink = "";
+	}
+}
+class ChoiceView extends ElementView {
+	constructor(controller, parentDOM) {
+		super(parentDOM);
+	}
 }
 
 class Text extends Element {
-	
+
 }
 class TextModel extends ElementModel {
 	constructor(parentObject) {
@@ -241,7 +399,7 @@ class TextModel extends ElementModel {
 			this.content = newText;
 		}
 	}
-	
+
 }
 class TextView extends ElementView {
 	createDOMElem() {
@@ -255,7 +413,7 @@ class TextView extends ElementView {
 		div.append(textContent);
 
 		this.DOMElement = div;
-		
+
 		return div;
 	}
 	createEditableField() {
@@ -278,7 +436,7 @@ class TextView extends ElementView {
 	}
 }
 
-class Action extends Element {	
+class Action extends Element {
 	getAvailableActions() {}
 }
 class ActionModel extends ElementModel {
@@ -291,21 +449,7 @@ class ActionModel extends ElementModel {
 	setAction(newAction) {  }
 }
 class ActionView extends ElementView {
-	
-}
 
-class Choice extends Element {
-	
-}
-class ChoiceModel extends ElementModel {
-	constructor(parentObject) {
-		super(parentObject, "choice");
-		this.name = "";
-		this.situationLink = "";
-	}
-}
-class ChoiceView extends ElementView {
-	
 }
 
 function Situation() {
