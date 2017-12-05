@@ -11,4 +11,5 @@ The goal of the project is to make creation of gamebook and visual novel easier.
 - Save your work in a JSON file (which you can open with any text editor)
 
 Copyright (c) 2017 Pierre-Elliott Thiboud
+
 All rights reserved.
