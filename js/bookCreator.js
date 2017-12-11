@@ -1,3 +1,10 @@
+/**
+ * @author Pierre-Elliott Thiboud / http://pierreelliott.github.io/
+ *
+ * Copyright (c) 2017 Pierre-Elliott Thiboud
+ * All rights reserved
+ */
+
 window.onload = function () {
 	var placeholder = document.getElementById("creationField");
 	var creator = new InteractiveAdventure(placeholder);

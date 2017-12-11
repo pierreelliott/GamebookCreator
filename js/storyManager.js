@@ -1,4 +1,11 @@
-window.onload = function() {
+/**
+ * @author Pierre-Elliott Thiboud / http://pierreelliott.github.io/
+ *
+ * Copyright (c) 2017 Pierre-Elliott Thiboud
+ * All rights reserved
+ */
+
+ window.onload = function() {
 	var story = {
 		name: "My Story",
 		author: "default",

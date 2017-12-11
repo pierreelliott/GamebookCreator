@@ -1,4 +1,11 @@
-function changeBackground(img) {
+/**
+ * @author Pierre-Elliott Thiboud / http://pierreelliott.github.io/
+ *
+ * Copyright (c) 2017 Pierre-Elliott Thiboud
+ * All rights reserved
+ */
+
+ function changeBackground(img) {
 	return document.getElementById("image").style.backgroundImage = "url("+img+")";
 }
 

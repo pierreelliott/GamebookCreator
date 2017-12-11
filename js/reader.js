@@ -1,4 +1,11 @@
-window.onload = function () {
+/**
+ * @author Pierre-Elliott Thiboud / http://pierreelliott.github.io/
+ *
+ * Copyright (c) 2017 Pierre-Elliott Thiboud
+ * All rights reserved
+ */
+
+ window.onload = function () {
 	var placeholder = document.getElementById("readerField");
 	var reader = new InteractiveAdventureReader(placeholder);
 
@@ -100,7 +107,7 @@ InteractiveAdventureReader.prototype = {
 		var text = document.createElement("div");
 		text.id = "readerText";
 		this.textDOM = text;
-		
+
 		var textHolder = document.createElement("div");
 		textHolder.id = "readerTextHolder";
 		this.textHolderDOM = textHolder;
@@ -225,7 +232,7 @@ InteractiveAdventureReader.prototype = {
 		&& this.savegame.currentChild !== undefined && this.story.situations[this.savegame.currentSituation].content[this.savegame.currentChild] !== undefined) {
 			// Display the current child of the current situation
 		} else {
-			
+
 		}
 	},
 	display: function (typeOfData, data) {

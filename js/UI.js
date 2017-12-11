@@ -1,4 +1,11 @@
-function toggleDisplay(elementHeader) {
+/**
+ * @author Pierre-Elliott Thiboud / http://pierreelliott.github.io/
+ *
+ * Copyright (c) 2017 Pierre-Elliott Thiboud
+ * All rights reserved
+ */
+
+ function toggleDisplay(elementHeader) {
 	var parent = elementHeader.parentNode;
 	if (parent.classList) {
     	parent.classList.toggle("active");
